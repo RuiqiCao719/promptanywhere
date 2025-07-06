@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+.loading-spinner {
+  @apply animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500;
+}
+
+.error-text {
+  @apply text-red-600 text-sm;
+}
+
+.success-text {
+  @apply text-green-600 text-sm;
+} 
