@@ -1,0 +1,376 @@
+/* Prompt Anywhere 悬浮球和悬浮窗样式 */
+
+/* 悬浮球样式 */
+.prompt-anywhere-float-ball {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    cursor: pointer;
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+}
+
+.prompt-anywhere-float-ball:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+}
+
+.prompt-anywhere-float-ball-icon {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.prompt-anywhere-float-ball.has-selection {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    animation: prompt-anywhere-pulse 1.5s infinite;
+}
+
+@keyframes prompt-anywhere-pulse {
+    0% { box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+    50% { box-shadow: 0 6px 30px rgba(16, 185, 129, 0.8); }
+    100% { box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+}
+
+/* 悬浮窗样式 */
+.prompt-anywhere-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: scale(0);
+    width: 380px;
+    max-width: 90vw;
+    max-height: 500px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    z-index: 2147483648;
+    overflow: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    display: none;
+}
+
+.prompt-anywhere-modal.show {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.prompt-anywhere-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: move;
+    user-select: none;
+}
+
+.prompt-anywhere-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.prompt-anywhere-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.prompt-anywhere-drag-hint {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-left: 8px;
+}
+
+.prompt-anywhere-controls {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.prompt-anywhere-minimize,
+.prompt-anywhere-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prompt-anywhere-minimize:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.prompt-anywhere-close:hover {
+    background: rgba(244, 63, 94, 0.8);
+}
+
+.prompt-anywhere-content {
+    padding: 15px 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.prompt-anywhere-selected-text {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    border-left: 3px solid rgba(255, 255, 255, 0.5);
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+.prompt-anywhere-selected-text-label {
+    font-size: 11px;
+    opacity: 0.8;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.prompt-anywhere-clear-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.prompt-anywhere-clear-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.prompt-anywhere-form-group {
+    margin-bottom: 12px;
+}
+
+.prompt-anywhere-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.prompt-anywhere-textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-family: inherit;
+    font-size: 13px;
+    resize: none;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease;
+}
+
+.prompt-anywhere-textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.prompt-anywhere-textarea::placeholder {
+    color: #666;
+    font-style: italic;
+}
+
+.prompt-anywhere-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.prompt-anywhere-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.prompt-anywhere-btn-primary {
+    background: #3b82f6;
+    color: white;
+    flex: 1;
+}
+
+.prompt-anywhere-btn-primary:hover:not(:disabled) {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.prompt-anywhere-btn-primary:disabled {
+    background: #6b7280;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.prompt-anywhere-btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    flex: 0 0 auto;
+}
+
+.prompt-anywhere-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.prompt-anywhere-loading {
+    text-align: center;
+    padding: 15px;
+}
+
+.prompt-anywhere-spinner {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 2px solid white;
+    width: 24px;
+    height: 24px;
+    animation: prompt-anywhere-spin 1s linear infinite;
+    margin: 0 auto 8px;
+}
+
+@keyframes prompt-anywhere-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.prompt-anywhere-response {
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid rgba(34, 197, 94, 0.5);
+    border-radius: 6px;
+    padding: 12px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 13px;
+    max-height: 200px;
+    overflow-y: auto;
+    animation: prompt-anywhere-fadeIn 0.3s ease;
+}
+
+.prompt-anywhere-error {
+    background: rgba(244, 63, 94, 0.2);
+    border: 1px solid rgba(244, 63, 94, 0.5);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 13px;
+    animation: prompt-anywhere-fadeIn 0.3s ease;
+}
+
+.prompt-anywhere-response-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    animation: prompt-anywhere-slideUp 0.3s ease;
+}
+
+@keyframes prompt-anywhere-fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes prompt-anywhere-slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 拖拽相关样式 */
+.prompt-anywhere-modal.dragging {
+    transition: none;
+    cursor: move;
+}
+
+.prompt-anywhere-modal.dragging * {
+    pointer-events: none;
+}
+
+/* 确保悬浮元素在所有元素之上 */
+.prompt-anywhere-float-ball,
+.prompt-anywhere-modal {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* 防止网站样式干扰 */
+.prompt-anywhere-modal *,
+.prompt-anywhere-float-ball * {
+    box-sizing: border-box;
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .prompt-anywhere-modal {
+        width: 95vw;
+        max-height: 70vh;
+    }
+    
+    .prompt-anywhere-content {
+        padding: 12px 15px;
+    }
+    
+    .prompt-anywhere-header {
+        padding: 12px 15px;
+    }
+    
+    .prompt-anywhere-float-ball {
+        width: 50px;
+        height: 50px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .prompt-anywhere-float-ball-icon {
+        font-size: 20px;
+    }
+} 

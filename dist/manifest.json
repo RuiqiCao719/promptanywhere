@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Prompt Anywhere",
+  "version": "1.0.0",
+  "description": "使用 GPT-4o 分析任何选中的文本",
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://api.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Prompt Anywhere"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_end"
+    }
+  ]
+} 

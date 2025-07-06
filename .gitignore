@@ -5,7 +5,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build outputs
-dist/
+# dist/ - Removed: Chrome extension dist folder should be committed
 *.tsbuildinfo
 
 # Environment variables
