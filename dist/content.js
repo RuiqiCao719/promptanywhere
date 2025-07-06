@@ -10,14 +10,112 @@ class PromptAnywhereFloating {
         this.currentResponse = null;
         this.isDragging = false;
         this.dragOffset = { x: 0, y: 0 };
+        this.currentLanguage = 'zh'; // 默认中文
+        
+        // 国际化文本
+        this.i18n = {
+            zh: {
+                ai_assistant: 'AI助手',
+                drag_hint: '拖拽移动',
+                selected_text: '选中的文本:',
+                your_question: '你的问题 (Ctrl+Enter发送):',
+                placeholder_text: '例如：总结、翻译、解释...',
+                send: '发送',
+                clear_question: '清空问题',
+                settings: '设置',
+                language: '语言:',
+                processing: '处理中...',
+                copy: '复制',
+                copied: '已复制！',
+                new_question: '新问题',
+                retry: '重试',
+                please_input: '请输入你的问题或指令',
+                please_select: '请先选择一段文本',
+                config_api: '请先配置 OpenAI API Key\n\n点击扩展图标进入设置'
+            },
+            en: {
+                ai_assistant: 'AI Assistant',
+                drag_hint: 'Drag to move',
+                selected_text: 'Selected text:',
+                your_question: 'Your question (Ctrl+Enter to send):',
+                placeholder_text: 'e.g.: summarize, translate, explain...',
+                send: 'Send',
+                clear_question: 'Clear Question',
+                settings: 'Settings',
+                language: 'Language:',
+                processing: 'Processing...',
+                copy: 'Copy',
+                copied: 'Copied!',
+                new_question: 'New Question',
+                retry: 'Retry',
+                please_input: 'Please enter your question or instruction',
+                please_select: 'Please select some text first',
+                config_api: 'Please configure OpenAI API Key first\n\nClick the extension icon to enter settings'
+            }
+        };
         
         this.init();
     }
 
-    init() {
+    async init() {
+        await this.loadLanguageSettings();
         this.createFloatBall();
         this.createModal();
         this.bindEvents();
+        this.updateLanguage();
+    }
+
+    // 加载语言设置
+    async loadLanguageSettings() {
+        try {
+            const result = await chrome.storage.local.get('prompt_anywhere_language');
+            if (result.prompt_anywhere_language) {
+                this.currentLanguage = result.prompt_anywhere_language;
+            }
+        } catch (error) {
+            console.log('Language settings not found, using default');
+        }
+    }
+
+    // 保存语言设置
+    async saveLanguageSettings() {
+        try {
+            await chrome.storage.local.set({
+                prompt_anywhere_language: this.currentLanguage
+            });
+        } catch (error) {
+            console.error('Failed to save language settings:', error);
+        }
+    }
+
+    // 更新界面语言
+    updateLanguage() {
+        const texts = this.i18n[this.currentLanguage];
+        
+        // 更新所有带有 data-i18n 属性的元素
+        this.modal.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (texts[key]) {
+                element.textContent = texts[key];
+            }
+        });
+        
+        // 更新 placeholder
+        const textarea = this.modal.querySelector('#prompt-anywhere-user-prompt');
+        if (textarea) {
+            textarea.placeholder = texts.placeholder_text;
+        }
+        
+        // 更新语言选择器
+        const languageSelect = this.modal.querySelector('#prompt-anywhere-language-select');
+        if (languageSelect) {
+            languageSelect.value = this.currentLanguage;
+        }
+    }
+
+    // 获取当前语言的文本
+    getText(key) {
+        return this.i18n[this.currentLanguage][key] || key;
     }
 
     // 创建悬浮球
@@ -39,41 +137,60 @@ class PromptAnywhereFloating {
         this.modal.innerHTML = `
             <div class="prompt-anywhere-header">
                 <div class="prompt-anywhere-title">
-                    <span>AI助手</span>
-                    <span class="prompt-anywhere-drag-hint">拖拽移动</span>
+                    <span data-i18n="ai_assistant">AI助手</span>
+                    <span class="prompt-anywhere-drag-hint" data-i18n="drag_hint">拖拽移动</span>
                 </div>
                 <div class="prompt-anywhere-controls">
+                    <button class="prompt-anywhere-settings" title="设置">⚙️</button>
                     <button class="prompt-anywhere-minimize" title="最小化">−</button>
                 </div>
             </div>
             <div class="prompt-anywhere-content">
                 <div class="prompt-anywhere-selected-text">
                     <div class="prompt-anywhere-selected-text-label">
-                        选中的文本:
+                        <span data-i18n="selected_text">选中的文本:</span>
                         <button id="prompt-anywhere-clear-selected" class="prompt-anywhere-clear-btn" title="清空选中文本">×</button>
                     </div>
                     <div id="prompt-anywhere-selected-text-content"></div>
                 </div>
                 
                 <div class="prompt-anywhere-form-group">
-                    <label class="prompt-anywhere-label">你的问题 (Ctrl+Enter发送):</label>
+                    <label class="prompt-anywhere-label" data-i18n="your_question">你的问题 (Ctrl+Enter发送):</label>
                     <textarea 
                         id="prompt-anywhere-user-prompt" 
                         class="prompt-anywhere-textarea" 
+                        data-i18n-placeholder="placeholder_text"
                         placeholder="例如：总结、翻译、解释..."
                     ></textarea>
                 </div>
                 
                 <div class="prompt-anywhere-buttons">
-                    <button id="prompt-anywhere-submit" class="prompt-anywhere-btn prompt-anywhere-btn-primary">
+                    <button id="prompt-anywhere-submit" class="prompt-anywhere-btn prompt-anywhere-btn-primary" data-i18n="send">
                         发送
                     </button>
-                    <button id="prompt-anywhere-clear-prompt" class="prompt-anywhere-btn prompt-anywhere-btn-secondary">
+                    <button id="prompt-anywhere-clear-prompt" class="prompt-anywhere-btn prompt-anywhere-btn-secondary" data-i18n="clear_question">
                         清空问题
                     </button>
                 </div>
                 
                 <div id="prompt-anywhere-result" style="display: none;"></div>
+            </div>
+            
+            <!-- 设置面板 -->
+            <div id="prompt-anywhere-settings-panel" class="prompt-anywhere-settings-panel" style="display: none;">
+                <div class="prompt-anywhere-settings-header">
+                    <h3 data-i18n="settings">设置</h3>
+                    <button class="prompt-anywhere-settings-close">×</button>
+                </div>
+                <div class="prompt-anywhere-settings-content">
+                    <div class="prompt-anywhere-setting-item">
+                        <label data-i18n="language">语言:</label>
+                        <select id="prompt-anywhere-language-select">
+                            <option value="zh">中文</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         `;
         
@@ -94,6 +211,11 @@ class PromptAnywhereFloating {
             e.stopPropagation();
             e.preventDefault();
             this.minimizeModal();
+        });
+        this.modal.querySelector('.prompt-anywhere-settings').addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.toggleSettings();
         });
         this.modal.querySelector('#prompt-anywhere-submit').addEventListener('click', () => this.handleSubmit());
         this.modal.querySelector('#prompt-anywhere-clear-prompt').addEventListener('click', () => this.clearPrompt());
@@ -129,6 +251,10 @@ class PromptAnywhereFloating {
                 this.minimizeModal();
             }
         });
+        
+        // 设置面板事件
+        this.modal.querySelector('.prompt-anywhere-settings-close').addEventListener('click', () => this.hideSettings());
+        this.modal.querySelector('#prompt-anywhere-language-select').addEventListener('change', (e) => this.changeLanguage(e.target.value));
     }
 
     // 开始拖拽
@@ -324,12 +450,12 @@ class PromptAnywhereFloating {
         const userPrompt = this.modal.querySelector('#prompt-anywhere-user-prompt').value.trim();
         
         if (!userPrompt) {
-            this.showError('请输入你的问题或指令');
+            this.showError(this.getText('please_input'));
             return;
         }
 
         if (!this.selectedText) {
-            this.showError('请先选择一段文本');
+            this.showError(this.getText('please_select'));
             return;
         }
 
@@ -337,14 +463,14 @@ class PromptAnywhereFloating {
         try {
             const config = await chrome.storage.local.get('prompt_anywhere_api_config');
             if (!config.prompt_anywhere_api_config || !config.prompt_anywhere_api_config.apiKey) {
-                this.showError('请先配置 OpenAI API Key\n\n点击扩展图标进入设置');
+                this.showError(this.getText('config_api'));
                 return;
             }
 
             await this.processRequest(userPrompt, config.prompt_anywhere_api_config);
         } catch (error) {
             console.error('Error:', error);
-            this.showError('获取配置失败: ' + error.message);
+            this.showError(error.message);
         }
     }
 
@@ -408,14 +534,14 @@ class PromptAnywhereFloating {
         result.innerHTML = `
             <div class="prompt-anywhere-loading">
                 <div class="prompt-anywhere-spinner"></div>
-                <div>处理中...</div>
+                <div>${this.getText('processing')}</div>
             </div>
         `;
         
         // 禁用提交按钮
         const submitBtn = this.modal.querySelector('#prompt-anywhere-submit');
         submitBtn.disabled = true;
-        submitBtn.textContent = '处理中...';
+        submitBtn.textContent = this.getText('processing');
     }
 
     // 显示响应
@@ -425,10 +551,10 @@ class PromptAnywhereFloating {
             <div class="prompt-anywhere-response">${response}</div>
             <div class="prompt-anywhere-response-actions">
                 <button id="prompt-anywhere-copy" class="prompt-anywhere-btn prompt-anywhere-btn-secondary">
-                    复制
+                    ${this.getText('copy')}
                 </button>
                 <button id="prompt-anywhere-new-query" class="prompt-anywhere-btn prompt-anywhere-btn-secondary">
-                    新问题
+                    ${this.getText('new_question')}
                 </button>
             </div>
         `;
@@ -451,7 +577,7 @@ class PromptAnywhereFloating {
             </div>
             <div class="prompt-anywhere-response-actions">
                 <button id="prompt-anywhere-retry" class="prompt-anywhere-btn prompt-anywhere-btn-primary">
-                    重试
+                    ${this.getText('retry')}
                 </button>
             </div>
         `;
@@ -470,7 +596,7 @@ class PromptAnywhereFloating {
             
             const copyBtn = this.modal.querySelector('#prompt-anywhere-copy');
             const originalText = copyBtn.textContent;
-            copyBtn.textContent = '已复制！';
+            copyBtn.textContent = this.getText('copied');
             copyBtn.style.background = '#10b981';
             
             setTimeout(() => {
@@ -486,7 +612,7 @@ class PromptAnywhereFloating {
     resetSubmitButton() {
         const submitBtn = this.modal.querySelector('#prompt-anywhere-submit');
         submitBtn.disabled = false;
-        submitBtn.textContent = '发送';
+        submitBtn.textContent = this.getText('send');
     }
 
     // 获取API错误信息
@@ -525,6 +651,29 @@ class PromptAnywhereFloating {
         if (window.getSelection) {
             window.getSelection().removeAllRanges();
         }
+    }
+
+    // 切换设置面板显示
+    toggleSettings() {
+        const settingsPanel = this.modal.querySelector('#prompt-anywhere-settings-panel');
+        if (settingsPanel.style.display === 'none') {
+            settingsPanel.style.display = 'block';
+        } else {
+            settingsPanel.style.display = 'none';
+        }
+    }
+
+    // 隐藏设置面板
+    hideSettings() {
+        const settingsPanel = this.modal.querySelector('#prompt-anywhere-settings-panel');
+        settingsPanel.style.display = 'none';
+    }
+
+    // 更改语言
+    changeLanguage(language) {
+        this.currentLanguage = language;
+        this.updateLanguage();
+        this.saveLanguageSettings();
     }
 }
 

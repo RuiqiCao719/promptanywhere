@@ -105,7 +105,8 @@
 }
 
 .prompt-anywhere-minimize,
-.prompt-anywhere-close {
+.prompt-anywhere-close,
+.prompt-anywhere-settings {
     background: none;
     border: none;
     color: white;
@@ -121,12 +122,17 @@
     justify-content: center;
 }
 
-.prompt-anywhere-minimize:hover {
+.prompt-anywhere-minimize:hover,
+.prompt-anywhere-settings:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
 .prompt-anywhere-close:hover {
     background: rgba(244, 63, 94, 0.8);
+}
+
+.prompt-anywhere-settings {
+    font-size: 14px;
 }
 
 .prompt-anywhere-content {
@@ -373,4 +379,87 @@
     .prompt-anywhere-float-ball-icon {
         font-size: 20px;
     }
+}
+
+/* 设置面板样式 */
+.prompt-anywhere-settings-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+}
+
+.prompt-anywhere-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.prompt-anywhere-settings-header h3 {
+    margin: 0;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.prompt-anywhere-settings-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prompt-anywhere-settings-close:hover {
+    background: rgba(244, 63, 94, 0.8);
+}
+
+.prompt-anywhere-settings-content {
+    padding: 20px;
+    flex: 1;
+}
+
+.prompt-anywhere-setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.prompt-anywhere-setting-item label {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.prompt-anywhere-setting-item select {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: #333;
+    font-size: 13px;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.prompt-anywhere-setting-item select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
 } 
