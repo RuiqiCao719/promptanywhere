@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- 背景圆形 -->
+  <circle cx="64" cy="64" r="56" fill="#667eea" stroke="#764ba2" stroke-width="4"/>
+  
+  <!-- AI 图标 - 对话气泡 -->
+  <path d="M32 48 L96 48 Q104 48 104 56 L104 72 Q104 80 96 80 L48 80 L32 96 L32 56 Q32 48 40 48 Z" 
+        fill="white" opacity="0.9"/>
+  
+  <!-- 省略号表示正在思考 -->
+  <circle cx="48" cy="64" r="3" fill="#667eea"/>
+  <circle cx="64" cy="64" r="3" fill="#667eea"/>
+  <circle cx="80" cy="64" r="3" fill="#667eea"/>
+  
+  <!-- GPT 文字 -->
+  <text x="64" y="110" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">GPT</text>
+</svg> 
